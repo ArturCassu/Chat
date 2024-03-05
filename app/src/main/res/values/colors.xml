@@ -4,9 +4,9 @@
     <color name="primary_dark">#02204F</color>
     <color name="primary_text">#242424</color>
     <color name="secondary_text">#696969</color>
-    <color name="white">#CCCCCC</color>
-    <color name="input_background">#BBBBBB</color>
-    <color name="icon_background">#BBBBBB</color>
+    <color name="white">#EEEEEE</color>
+    <color name="input_background">#DDDDDD</color>
+    <color name="icon_background">#DDDDDD</color>
     <color name="error">#AF0069</color>
     <color name="received_message_background">#01102F</color>
 </resources>
