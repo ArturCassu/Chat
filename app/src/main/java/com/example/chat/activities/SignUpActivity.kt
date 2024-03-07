@@ -3,7 +3,6 @@ package com.example.chat.activities
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -13,27 +12,30 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import com.example.chat.R
-import com.example.chat.databinding.ActivitySignInBinding
 import com.example.chat.databinding.ActivitySignUpBinding
+import com.example.chat.utils.Constants
+import com.example.chat.utils.PreferenceManager
+import com.google.firebase.firestore.FirebaseFirestore
 import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
 
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
-    private lateinit var encodedImage: String;
-
+    private lateinit var preferenceManager: PreferenceManager
+    private var encodedImage: String? = null
+    private val constants = Constants()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        preferenceManager = PreferenceManager(applicationContext)
 
         setListeners()
     }
 
     private fun setListeners() {
-        binding.textSignIn.setOnClickListener { onBackPressed() }
+        binding.textSignIn.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
         binding.buttonSignUp.setOnClickListener{
             if (isValidSignUpDetails()){
                 signUp()
@@ -51,7 +53,30 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun signUp(){
-
+        loading(true)
+        val database: FirebaseFirestore = FirebaseFirestore.getInstance()
+        val user = hashMapOf<String, Any>(
+                constants.KEY_NAME to binding.inputName.text.toString() ,
+                constants.KEY_EMAIL to binding.inputEmail.text.toString() ,
+                constants.KEY_PASSWORD to binding.inputPassword.text.toString(),
+                constants.KEY_IMAGE to encodedImage!!
+            )
+        database.collection(constants.KEY_COLLECTION_USERS)
+            .add(user)
+            .addOnSuccessListener {
+                loading(false)
+                preferenceManager.putBoolean(constants.KEY_IS_SIGNED,true)
+                preferenceManager.putString(constants.KEY_USER_ID, it.id)
+                preferenceManager.putString(constants.KEY_NAME, binding.inputName.text.toString())
+                preferenceManager.putString(constants.KEY_IMAGE, encodedImage!!)
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
+            }
+            .addOnFailureListener { e->
+                loading(false)
+                e.message?.let { message -> showToast(message) }
+            }
     }
 
     private fun encodeImage(bitmap: Bitmap):String {
@@ -81,7 +106,6 @@ class SignUpActivity : AppCompatActivity() {
            }
        }
    }
-
     private fun isValidSignUpDetails():Boolean{
         if (encodedImage == null){
             showToast("Select profile image")

@@ -112,7 +112,8 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_16sdp">
+            android:layout_marginTop="@dimen/_16sdp"
+            android:animateLayoutChanges="true">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonSignUp"

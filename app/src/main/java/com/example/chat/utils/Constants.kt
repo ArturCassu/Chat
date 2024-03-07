@@ -9,5 +9,4 @@ class Constants {
     val KEY_IS_SIGNED = "isSignedIn"
     val KEY_USER_ID = "userId"
     val KEY_IMAGE = "image"
-
 }
