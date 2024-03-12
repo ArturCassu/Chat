@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
@@ -24,7 +25,6 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
     private lateinit var preferenceManager: PreferenceManager
     private var encodedImage: String? = null
-    private val constants = Constants()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
@@ -56,19 +56,19 @@ class SignUpActivity : AppCompatActivity() {
         loading(true)
         val database: FirebaseFirestore = FirebaseFirestore.getInstance()
         val user = hashMapOf<String, Any>(
-                constants.KEY_NAME to binding.inputName.text.toString() ,
-                constants.KEY_EMAIL to binding.inputEmail.text.toString() ,
-                constants.KEY_PASSWORD to binding.inputPassword.text.toString(),
-                constants.KEY_IMAGE to encodedImage!!
+                Constants.KEY_NAME to binding.inputName.text.toString() ,
+                Constants.KEY_EMAIL to binding.inputEmail.text.toString() ,
+                Constants.KEY_PASSWORD to binding.inputPassword.text.toString(),
+                Constants.KEY_IMAGE to encodedImage!!
             )
-        database.collection(constants.KEY_COLLECTION_USERS)
+        database.collection(Constants.KEY_COLLECTION_USERS)
             .add(user)
             .addOnSuccessListener {
                 loading(false)
-                preferenceManager.putBoolean(constants.KEY_IS_SIGNED,true)
-                preferenceManager.putString(constants.KEY_USER_ID, it.id)
-                preferenceManager.putString(constants.KEY_NAME, binding.inputName.text.toString())
-                preferenceManager.putString(constants.KEY_IMAGE, encodedImage!!)
+                preferenceManager.putBoolean(Constants.KEY_IS_SIGNED,true)
+                preferenceManager.putString(Constants.KEY_USER_ID, it.id)
+                preferenceManager.putString(Constants.KEY_NAME, binding.inputName.text.toString())
+                preferenceManager.putString(Constants.KEY_IMAGE, encodedImage!!)
                 val intent = Intent(applicationContext, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(intent)

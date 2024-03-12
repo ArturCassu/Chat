@@ -5,10 +5,9 @@ import android.content.SharedPreferences
 
 class PreferenceManager(context: Context) {
     private var sharedPreferences: SharedPreferences
-    private val constants = Constants()
 
     init {
-        sharedPreferences = context.getSharedPreferences(constants.KEY_PREFERENCE_NAME, Context.MODE_PRIVATE)
+        sharedPreferences = context.getSharedPreferences(Constants.KEY_PREFERENCE_NAME, Context.MODE_PRIVATE)
     }
 
     fun putBoolean(key:String, value:Boolean){

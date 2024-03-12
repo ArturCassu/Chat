@@ -16,7 +16,6 @@ import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : AppCompatActivity() {
 
-    private val constants = Constants()
     private lateinit var bindind: ActivityMainBinding;
     private lateinit var preferenceManager: PreferenceManager;
 
@@ -33,11 +32,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun setListeners(){
         bindind.imageSignOut.setOnClickListener { signOut() }
+        bindind.fabNewChat.setOnClickListener { startActivity(Intent(applicationContext, UsersActivity::class.java))}
     }
 
     private fun loadUserDetails(){
-        bindind.textName.text = preferenceManager.getString(constants.KEY_NAME)
-        val bytes = Base64.decode(preferenceManager.getString(constants.KEY_IMAGE), Base64.DEFAULT)
+        bindind.textName.text = preferenceManager.getString(Constants.KEY_NAME)
+        val bytes = Base64.decode(preferenceManager.getString(Constants.KEY_IMAGE), Base64.DEFAULT)
         val bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.size)
         bindind.imageProfile.setImageBitmap(bitmap)
     }
@@ -53,21 +53,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateToken(token: String){
         val database = FirebaseFirestore.getInstance()
-        val documentReference = database.collection(constants.KEY_COLLECTION_USERS)
-            .document(preferenceManager.getString(constants.KEY_USER_ID)!!)
-        documentReference.update(constants.KEY_FCM_TOKEN, token)
-//            .addOnSuccessListener { showToast("Token update successfully") }
-//            .addOnFailureListener { showToast("Unable to update token") }
+        val documentReference = database.collection(Constants.KEY_COLLECTION_USERS)
+            .document(preferenceManager.getString(Constants.KEY_USER_ID)!!)
+        documentReference.update(Constants.KEY_FCM_TOKEN, token)
+            .addOnFailureListener { showToast("Unable to update token") }
 
     }
 
     private fun signOut() {
         showToast("Signing out...")
         val database = FirebaseFirestore.getInstance()
-        val documentReference = preferenceManager.getString(constants.KEY_USER_ID)?.let {
-            database.collection(constants.KEY_COLLECTION_USERS).document(it)
+        val documentReference = preferenceManager.getString(Constants.KEY_USER_ID)?.let {
+            database.collection(Constants.KEY_COLLECTION_USERS).document(it)
         }
-        val updates = hashMapOf<String, Any>( constants.KEY_FCM_TOKEN to FieldValue.delete() )
+        val updates = hashMapOf<String, Any>( Constants.KEY_FCM_TOKEN to FieldValue.delete() )
         documentReference?.update(updates)
             ?.addOnSuccessListener {
             preferenceManager.clear()

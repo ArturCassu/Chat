@@ -16,11 +16,10 @@ class SignInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignInBinding
     private lateinit var preferenceManager: PreferenceManager
-    private val constants = Constants()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         preferenceManager = PreferenceManager(applicationContext)
-        if (preferenceManager.getBoolean(constants.KEY_IS_SIGNED)){
+        if (preferenceManager.getBoolean(Constants.KEY_IS_SIGNED)){
             val intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
             finish()
@@ -48,17 +47,17 @@ class SignInActivity : AppCompatActivity() {
     private fun signIn(){
         loading(true)
         val database = FirebaseFirestore.getInstance()
-        database.collection(constants.KEY_COLLECTION_USERS)
-            .whereEqualTo(constants.KEY_EMAIL, binding.inputEmail.text.toString())
-            .whereEqualTo(constants.KEY_PASSWORD, binding.inputPassword.text.toString())
+        database.collection(Constants.KEY_COLLECTION_USERS)
+            .whereEqualTo(Constants.KEY_EMAIL, binding.inputEmail.text.toString())
+            .whereEqualTo(Constants.KEY_PASSWORD, binding.inputPassword.text.toString())
             .get()
             .addOnCompleteListener {
                 if(it.isSuccessful && it.result != null && it.result.documents.size > 0){
                     val documentSnapshot = it.result.documents[0]
-                    preferenceManager.putBoolean(constants.KEY_IS_SIGNED, true)
-                    preferenceManager.putString(constants.KEY_USER_ID, documentSnapshot.id)
-                    preferenceManager.putString(constants.KEY_NAME, documentSnapshot.getString(constants.KEY_NAME)!!)
-                    preferenceManager.putString(constants.KEY_IMAGE, documentSnapshot.getString(constants.KEY_IMAGE)!!)
+                    preferenceManager.putBoolean(Constants.KEY_IS_SIGNED, true)
+                    preferenceManager.putString(Constants.KEY_USER_ID, documentSnapshot.id)
+                    preferenceManager.putString(Constants.KEY_NAME, documentSnapshot.getString(Constants.KEY_NAME)!!)
+                    preferenceManager.putString(Constants.KEY_IMAGE, documentSnapshot.getString(Constants.KEY_IMAGE)!!)
                     val intent = Intent(applicationContext, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     startActivity(intent)

@@ -11,13 +11,12 @@ import com.example.chat.databinding.ItemContainerUserBinding
 import com.example.chat.models.User
 
 class UsersAdapter(private val users: List<User>): RecyclerView.Adapter<UsersAdapter.UserViewHolder>() {
-    class UserViewHolder(itemContainerUserBinding: ItemContainerUserBinding, itemView: View): RecyclerView.ViewHolder(itemView) {
-        private val binding = itemContainerUserBinding
+    class UserViewHolder(private val binding: ItemContainerUserBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun setUserData(user: User) {
-            binding.textName.text = user.name
-            binding.textEmail.text = user.email
-            binding.imageProfile.setImageBitmap(getUserImage(user.image))
+        fun setUserData(user: User) = with(binding){
+            textName.text = user.name
+            textEmail.text = user.email
+            imageProfile.setImageBitmap(getUserImage(user.image))
         }
         private fun getUserImage(encodedString: String): Bitmap {
             val bytes = Base64.decode(encodedString, Base64.DEFAULT)
@@ -32,7 +31,7 @@ class UsersAdapter(private val users: List<User>): RecyclerView.Adapter<UsersAda
             parent,
             false
         )
-        return UserViewHolder(itemContainerUserBinding, parent)
+        return UserViewHolder(itemContainerUserBinding)
     }
 
     override fun getItemCount(): Int = users.size
