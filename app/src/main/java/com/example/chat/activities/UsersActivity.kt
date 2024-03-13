@@ -22,7 +22,7 @@ class UsersActivity : AppCompatActivity(), UserListener {
         super.onCreate(savedInstanceState)
         binding = ActivityUsersBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        preferenceManager = PreferenceManager(this)
+        preferenceManager = PreferenceManager(applicationContext)
         setListeners()
         getUsers()
     }
@@ -49,7 +49,8 @@ class UsersActivity : AppCompatActivity(), UserListener {
                             email = queryDocumentSnapshot.getString(Constants.KEY_EMAIL)!!,
                             name = queryDocumentSnapshot.getString(Constants.KEY_NAME)!!,
                             image = queryDocumentSnapshot.getString(Constants.KEY_IMAGE)!!,
-                            token = queryDocumentSnapshot.getString(Constants.KEY_FCM_TOKEN)
+                            token = queryDocumentSnapshot.getString(Constants.KEY_FCM_TOKEN),
+                            id = queryDocumentSnapshot.id
                         )
                         users.add(user)
                     }
@@ -81,6 +82,7 @@ class UsersActivity : AppCompatActivity(), UserListener {
 
     override fun onUserClicked(user: User) {
         val intent = Intent(applicationContext, ChatActivity::class.java)
+        preferenceManager.putString(Constants.KEY_RECEIVER_ID, user.id)
         intent.putExtra(Constants.KEY_USER, user)
         startActivity(intent)
         finish()

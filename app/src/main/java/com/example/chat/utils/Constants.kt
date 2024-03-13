@@ -12,5 +12,10 @@ class Constants {
         val KEY_IMAGE = "image"
         val KEY_FCM_TOKEN = "fcmToken"
         val KEY_USER = "user"
+        val KEY_COLLECTION_CHAT = "chat"
+        val KEY_SENDER_ID = "senderId"
+        val KEY_RECEIVER_ID = "receiverId"
+        val KEY_MESSAGE = "message"
+        val KEY_TIMESTAMP = "timestamp"
     }
 }

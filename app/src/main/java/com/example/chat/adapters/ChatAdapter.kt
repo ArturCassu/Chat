@@ -8,7 +8,7 @@ import com.example.chat.databinding.ItemContainerReceivedMessageBinding
 import com.example.chat.databinding.ItemContainerSentMessageBinding
 import com.example.chat.models.ChatMessage
 
-class ChatAdapter(val receiverProfileImage: Bitmap, val chatMessages: List<ChatMessage>, val senderId: String ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ChatAdapter(val chatMessages: List<ChatMessage>, val receiverProfileImage: Bitmap, val senderId: String ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val VIEW_TYPE_SENT = 1
     private val VIEW_TYPE_RECEIVED = 2
 
