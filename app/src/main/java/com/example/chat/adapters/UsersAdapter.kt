@@ -8,15 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chat.databinding.ItemContainerUserBinding
+import com.example.chat.listeners.UserListener
 import com.example.chat.models.User
 
-class UsersAdapter(private val users: List<User>): RecyclerView.Adapter<UsersAdapter.UserViewHolder>() {
-    class UserViewHolder(private val binding: ItemContainerUserBinding): RecyclerView.ViewHolder(binding.root) {
-
+class UsersAdapter(private val users: List<User>, val listener: UserListener): RecyclerView.Adapter<UsersAdapter.UserViewHolder>() {
+    inner class UserViewHolder(private val binding: ItemContainerUserBinding): RecyclerView.ViewHolder(binding.root) {
         fun setUserData(user: User) = with(binding){
             textName.text = user.name
             textEmail.text = user.email
             imageProfile.setImageBitmap(getUserImage(user.image))
+            root.setOnClickListener{listener.onUserClicked(user)}
         }
         private fun getUserImage(encodedString: String): Bitmap {
             val bytes = Base64.decode(encodedString, Base64.DEFAULT)
